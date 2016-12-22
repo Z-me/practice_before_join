@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>VUE.js練習HTML</title>
+</head>
+<body>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <div id="app-7">
+    <ol>
+      <!-- todo オブジェクトによって各 todo-item を提供します。それは、内容を動的にできるように表します。-->
+      <todo-item v-for="item in groceryList" v-bind:todo="item"></todo-item>
+    </ol>
+  </div>
+  <script src="p7.js"></script>
+</body>
+</html>
