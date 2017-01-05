@@ -6,7 +6,7 @@
   </head>
   <body>
     <div>
-      <input id="name" placeholder="名前" />
+      <input id="from" placeholder="名前" />
       <input id="message" placeholder="メッセージ" />
       <button id="send">投稿</button>
     </div>
@@ -23,13 +23,13 @@
       // 既存メッセージを表示
       messagesRef.on('child_added', function(snapshot) { // ... 3
         var msg = snapshot.val();
-        $('<li>').text(msg.name + ': ' + msg.body).prependTo('#messages');
+        $('<li>').text(msg.from + ': ' + msg.body).prependTo('#messages');
       });
  
       $('#send').click(function() {
         // 新規メッセージを投稿
         messagesRef.push({ // ... 4
-          name: $('#name').val(),
+          from: $('#from').val(),
           body: $('#message').val()
         });
       });

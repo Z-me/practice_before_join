@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja" id="app">
+<head>
+  <meta charset="UTF-8">
+  <title v-text="title"></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+  <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+</head>
+<body>
+ <div v-repeat="data:messages">
+   
+ </div>
+ <p>ココから本番</p>
+ 
+  <div v-repeat="message:messages">
+    {{$index}}
+    <input v-model="message.body" value="{{message.body}}" v-on="keyup:changeMessage(message)">
+    from:{{message.from}}
+    <button v-on="click:deleteMessage($index)" >x</button>
+    <br>
+  </div>
+  <form id="form" v-on="submit:addMessage">
+    from:<br>
+    <input v-model="newMessage.from">
+    <br>
+    message:<br>
+    <input v-model="newMessage.body">
+    <input type="submit" value="Add Message">
+  </form>
+  <script src="F_p1.js"></script>  
+</body>
+</html>
