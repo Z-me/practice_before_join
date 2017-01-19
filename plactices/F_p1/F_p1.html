@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" id="app">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <title v-text="title"></title>
@@ -7,10 +7,12 @@
   <script src="https://cdn.firebase.com/js/client/2.3.2/firebase.js"></script>  <script src="https://unpkg.com/vue/dist/vue.js"></script>
 </head>
 <body>
- <div v-repeat="data:messages">
-   
- </div>
- <p>ココから本番</p>
+  <div id="app">
+    <div v-repeat="data:newMessage">
+      {{$index}}
+    </div>
+  </div>
+<!-- <p>ココから本番</p>
  
   <div v-repeat="message:messages">
     {{$index}}
@@ -26,7 +28,7 @@
     message:<br>
     <input v-model="newMessage.body">
     <input type="submit" value="Add Message">
-  </form>
+  </form>-->
   <script src="F_p1.js"></script>  
 </body>
 </html>

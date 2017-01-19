@@ -1,13 +1,15 @@
 //NOTE: データベース連結部
 var baseURL = "https://practice-9a9dd.firebaseio.com";
 
-var Messages = new Firebase(baseURL + 'messages');
+var firebase = new Firebase(baseURL);
+var Messages = firebase.child('messages');
 
 //要素変更時の処理
-Messages.on('child_added',function(){
+Messages.on('child_added',function(snapshot){
   var message = snapshot.val();
-  message.id = snapshot.name();
-  app.message.push(message);
+  console.log(message.from + ":" + message.body);
+//  message.from = snapshot.name();
+  app.data.messages.push(message);
 })
 
 //NOTE: 表示処理
@@ -16,8 +18,8 @@ var app = new Vue({
   data: {
     messages: [],
     newMessage: {
-      from: '',
-      message: ''
+      from: 'テスト',
+      body: 'テストｔ'
     }
   },
   methods: {
