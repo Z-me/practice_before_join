@@ -3,20 +3,19 @@
 var baseURL = 'https://practice-9a9dd.firebaseio.com';
 var firebase = new Firebase(baseURL);
 var DB = firebase.child('shopping');
+var Basket = firebase.child('bascket');
 
 //商品追加
 DB.on('child_added',function(datas){
   var data = datas.val();
   data.id = datas.key();
   item.items.push(data);
-  baskets.items.push(data); //確認用
-  console.log(item.items);
 });
 
 //商品変更
 DB.on('child_changed',function(datas){
-  var id = datas.name();
-  item.data.items.some(function(item){
+  var id = datas.key();
+  item.items.some(function(item){
     if(item.id === id){
       item.number = datas.val().number;
       return true;
@@ -24,88 +23,67 @@ DB.on('child_changed',function(datas){
   })
 });
 
+//商品削除
+DB.on('child_removed',function(datas){
+  
+});
+
+//NOTE: 買い物かご追加
+Basket.on('child_added',function(datas){
+  var data = datas.val();
+  data.id = datas.key();
+  item.baskets.push(data);
+  item.totalValue += data.buy*data.value;
+});
+
+
 var item = new Vue({
   el: "#Shopping",
   data:{
-    items:[
-      {
-        name:"リンゴの腕時計",
-        value:23770,
-        imageURL:"http://store.storeimages.cdn-apple.com/8561/as-images.apple.com/is/image/AppleInc/aos/published/images/2/up/2up/ceramic/2up-ceramic-sport-cloud-select?wid=470&hei=556&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1473703206368",
-        number:1
-      }
-    ],
+    items:[],
     newItem:{
         name:"",
         value:"",
         imageURL:"",
-        number:''
+        number:'',
+        buy:0
     },
-    methods:{
-      //TODO: 商品追加
-      addItem: function(data){
-        
-      },
-      //TODO: 商品変更
-      changeItem: function(data){
-      
-      },
-      //TODO: 商品削除
-      deleteItem: function(data){
-        
-      }
-    }
-  }
-});
-
-//NOTE: 買い物かご
-var baskets = new Vue({
-  el: '#Shopping_basket',
-  data:{
-    user:"テストユーザ",
-    items : [
-      {
-        name:"リンゴの腕時計",
-        value:23770,
-        imageURL:"http://store.storeimages.cdn-apple.com/8561/as-images.apple.com/is/image/AppleInc/aos/published/images/2/up/2up/ceramic/2up-ceramic-sport-cloud-select?wid=470&hei=556&fmt=jpeg&qlt=95&op_sharpen=0&resMode=bicub&op_usm=0.5,0.5,0,0&iccEmbed=0&layer=comp&.v=1473703206368",
-        number:1
-      }
-    ],
-    newItems:{
-      name: '',
-      value:'',
-      imageURL: '',
-      number: '',
-    },
-    methods:{
-      //TODO: 購入物品登録
-      addBasket: function(data){
-        
-      },
-      //TODO: 購入物品変更
-      changeBasket: function(data){
-        
-      },
-      //TODO: 購入物品削除
-      deleteBasket: function(data){
-        
-      }
-    }
-  }
-});
-
-//NOTE: ログイン
-var auth = new Vue({
-  el: "#Auth",
-  data:{
-    username:"test",
-    password:"test"
+    baskets:[],
+    totalValue:0
   },
-  methods:{
-    //TODO: loginメソッド
-    logIn: function(){
-      
-    }
+  methods: {
+    //NOTE: 商品追加
+    addItem: function () {
+      DB.push(this.newItem);
+      console.table(this.newItem);    
+    },
+    //NOTE: 商品削除
+    deleteItem: function(data){
+      if(confirm("本当に「"+data.name+"」を削除しますか？")){
+        console.log(data.id);
+        DB.child(data.id).remove();
+        var index = this.items.indexOf(data);
+        this.items.splice(index,1);
+      }
+    },
+    //NOTE: 商品を買い物かごに追加
+    pushBasket: function(data){
+      if(data.buy==0)
+        return alert("購入個数を入力して下さい");
+      console.log(data);
+//      this.baskets.push(data);
+      delete data.number;
+      Basket.push(data);
+      for(var i in this.items){
+        if(data['id']==this.items[i]['id']){
+          this.items[i]['number'] -= data['buy'];
+          //NOTE:DBでの在庫変更
+          DB.child(this.items[i]['id']).child('number').set(this.items[i]['number']);
+        }
+      }
+    },
+    
+    
+    
   }
 });
-
