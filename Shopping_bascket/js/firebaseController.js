@@ -71,8 +71,7 @@ var item = new Vue({
       if(data.buy==0)
         return alert("購入個数を入力して下さい");
       console.log(data);
-//      this.baskets.push(data);
-      delete data.number;
+      data['item_id'] = data.id;
       Basket.push(data);
       for(var i in this.items){
         if(data['id']==this.items[i]['id']){
@@ -83,7 +82,23 @@ var item = new Vue({
       }
     },
     
-    
+    //NOTE: 買い物かごから商品を削除
+    deleteItem4Basket: function(data){
+      if(confirm("本当に「"+data.name+"」"+data.buy+"個を買い物かごから削除しますか?")){
+        console.log(data.id);
+        Basket.child(data.id).remove();
+        
+      for(var i in this.items){
+        if(data.item_id==this.items[i]['id']){
+          //NOTE:DBでの在庫変更
+          DB.child(this.items[i]['id']).child('number').set(this.items[i]['number']+data.buy);
+//          console.log(this.items[i]);
+        }
+      }
+        var index = this.baskets.indexOf(data);
+        this.baskets.splice(index,1);
+      }
+    }
     
   }
 });
