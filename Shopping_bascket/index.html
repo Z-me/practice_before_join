@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>お買い物システム</title>
+  <script src="../js/jquery.min.js"></script>
+  <script src="../js/bootstrap.min.js"></script>
+  <script src="../js/firebase.js"></script>
+  <script src="../js/vue.js"></script>
+  <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+  <div class="col-md-12" style="height:30px"></div>
+  
+  <div id="Shopping">
+      <h2>商品追加</h2>
+      <table>
+        <tr>
+          <td class="col-md-6">
+            <input type="text" class="form-control" id="name" v-model="newItem.name" placeholder="商品名">        
+          </td>
+          <td class="col-md-6">
+            <input type="text" class="form-control" id="url" v-model="newItem.imageURL" placeholder="商品画像URL">
+          </td>
+        </tr>
+        <tr>
+          <td class="col-md-4">
+            <input type="number" class="form-control" id="value" v-model="newItem.value" placeholder="価格">
+          </td>
+          <td class="col-md-4">
+            <input type="number" class="form-control" v-model="newItem.number" placeholder="在庫数">
+          </td>
+          <td class="cok-md-4">
+            <button type="button" class="btn btn-success btn-lg btn-block" v-on:click="addItem">登録</button>
+          </td>
+        </tr>
+      </table>  
+<!--    </div>-->
+      
+    <div class="col-md-12" style="height:30px"></div>
+    
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-md-3 h1"></th><th class="col-md-4 h1">商品名</th><th class="col-md-2 h1">価格</th><th class="col-md-1 h1">個数</th><th class="col-md-2 h1" colspan="3">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in items">
+          <td>
+            <img :src='item.imageURL' width="100px"/>
+          </td>
+          <td class="h2">
+            {{item.name}}
+          </td>
+          <td class="h3">
+            {{item.value}}
+          </td>
+          <td class="h3">
+            {{item.number}}
+          </td>
+          <td>
+            <input v-model='item.buy' type="number" min="0" v-bind:max='item.number'>
+          </td><td>
+            <button type="button" class="btn btn-primary btn-lg btn-block" v-on:click="pushBasket(item)">買い物かごへ</button>
+          </td><td>
+            <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="deleteItem(item)">削除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div class="col-md-12" style="height:30px"></div>
+    <h1>買い物かご　 (合計金額{{totalValue}}円)</h1>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th class="col-md-3 h1"></th><th class="col-md-4 h1">商品名</th><th class="col-md-2 h1">価格</th><th class="col-md-1 h1">購入個数</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="basket in baskets">
+          <td>
+            <img :src='basket.imageURL' width="100px"/>
+          </td>
+          <td class="h2">
+            {{basket.name}}
+          </td>
+          <td class="h3">
+            {{basket.value}}
+          </td>
+          <td class="h3">
+            {{basket.buy}}
+          </td>
+          <td>
+            <button type="button" class="btn btn-danger btn-lg btn-block" v-on:click="deleteItem4Basket(basket)">キャンセル</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+      
+    <pre>data: {{$data.baskets}}</pre>
+  </div>
+  <div class="col-md-12" style="height:30px"></div>
+  <div id="Shopping_basket" class="container col-md-12"></div>
+  
+  <script src="firebaseController.js"></script>
+</body>
+</html>
